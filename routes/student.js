@@ -12,6 +12,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const db = require('../db');
 
@@ -32,7 +33,22 @@ const upload = multer({ storage });
 router.get('/', (req, res) => {
   try {
     const assignments = db.prepare('SELECT * FROM assignments ORDER BY id DESC').all();
-    res.render('index', { assignments });
+    
+    // views 폴더 내 index.ejs 존재 여부 확인 후 안전하게 렌더링
+    const viewsDir = path.join(__dirname, '..', 'views');
+    if (fs.existsSync(path.join(viewsDir, 'index.ejs'))) {
+      res.render('index', { assignments });
+    } else if (fs.existsSync(path.join(viewsDir, 'student_index.ejs'))) {
+      res.render('student_index', { assignments });
+    } else {
+      // index EJS 파일이 없을 경우 기본 HTML 응답
+      let html = '<h1>📚 학생 과제 제출 목록</h1><ul>';
+      assignments.forEach(a => {
+        html += `<li><a href="/assignments/${a.id}">${a.title}</a> (마감: ${a.due_date || '없음'})</li>`;
+      });
+      html += '</ul>';
+      res.send(html);
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send('서버 오류가 발생했습니다.');
