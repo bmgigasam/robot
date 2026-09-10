@@ -38,12 +38,19 @@
       <% } else { %>
         <table>
           <thead>
-            <tr><th>이름</th><th>학번</th><th>파일명</th><th>제출 시각</th><th></th><th></th></tr>
+            <tr>
+              <th style="white-space: nowrap; min-width: 80px;">이름</th>
+              <th>학번</th>
+              <th>파일명</th>
+              <th>제출 시각</th>
+              <th></th>
+              <th></th>
+            </tr>
           </thead>
           <tbody>
             <% submissions.forEach(s => { %>
               <tr>
-                <td><%= s.student_name %></td>
+                <td style="white-space: nowrap;"><%= s.student_name %></td>
                 <td><%= s.student_number || '-' %></td>
                 <td><%= s.original_filename %></td>
                 <td><%= s.submitted_at %></td>
