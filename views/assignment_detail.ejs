@@ -42,6 +42,7 @@
               <th style="white-space: nowrap; min-width: 80px;">이름</th>
               <th>학번</th>
               <th>파일명</th>
+              <th>선생님께 남긴 메모</th>
               <th>제출 시각</th>
               <th></th>
               <th></th>
@@ -53,6 +54,7 @@
                 <td style="white-space: nowrap;"><%= s.student_name %></td>
                 <td><%= s.student_number || '-' %></td>
                 <td><%= s.original_filename %></td>
+                <td style="max-width: 250px; word-break: break-all;"><%= s.comment || '-' %></td>
                 <td><%= s.submitted_at %></td>
                 <td><a href="/teacher/submissions/<%= s.id %>/download" class="btn" style="margin-top:0; padding:6px 12px; font-size:13px;">다운로드</a></td>
                 <td>
