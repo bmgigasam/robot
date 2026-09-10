@@ -1,15 +1,27 @@
-// server.js
 require('dotenv').config();
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
+
+// uploads 및 data 필수 폴더 자동 생성 (폴더가 없어서 발생하는 ENOENT 에러 방지)
+const uploadDir = path.join(__dirname, 'uploads');
+const dataDir = path.join(__dirname, 'data');
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
 
 const studentRoutes = require('./routes/student');
 const authRoutes = require('./routes/auth');
 const teacherRoutes = require('./routes/teacher');
 
 const app = express();
+
 // 서버 시작 시 초기 교사 계정 자동 생성/재설정
 const db = require('./db');
 const bcrypt = require('bcryptjs');
