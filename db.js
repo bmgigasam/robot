@@ -38,6 +38,7 @@ db.exec(`
     original_filename TEXT NOT NULL,
     stored_filename TEXT NOT NULL,
     student_password_hash TEXT NOT NULL,
+    comment TEXT,
     submitted_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
     FOREIGN KEY (assignment_id) REFERENCES assignments(id)
@@ -51,6 +52,9 @@ if (!submissionColumns.includes('student_password_hash')) {
 }
 if (!submissionColumns.includes('updated_at')) {
   db.exec("ALTER TABLE submissions ADD COLUMN updated_at TEXT");
+}
+if (!submissionColumns.includes('comment')) {
+  db.exec("ALTER TABLE submissions ADD COLUMN comment TEXT");
 }
 
 module.exports = db;
