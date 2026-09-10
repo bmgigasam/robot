@@ -12,13 +12,13 @@ const teacherRoutes = require('./routes/teacher');
 const app = express();
 // 서버 시작 시 초기 교사 계정 자동 생성 (없을 경우)
 const db = require('./db');
-const bcrypt = require('bcrypt'); // 또는 프로젝트에서 사용 중인 암호화 라이브러리
+const crypto = require('crypto'); // 또는 프로젝트에서 사용 중인 암호화 라이브러리
 
 async function initTeacher() {
   try {
     const teacher = db.prepare('SELECT * FROM teachers LIMIT 1').get();
     if (!teacher) {
-      const hash = await bcrypt.hash('1234', 10); // 기본 비밀번호: 1234
+      const hash = crypto.createHash('sha256').update('1234').digest('hex');
       db.prepare('INSERT INTO teachers (username, password_hash) VALUES (?, ?)').run('admin', hash);
       console.log('기본 교사 계정 생성 완료 (ID: admin / PW: 1234)');
     }
