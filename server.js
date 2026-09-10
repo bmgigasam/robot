@@ -10,20 +10,24 @@ const authRoutes = require('./routes/auth');
 const teacherRoutes = require('./routes/teacher');
 
 const app = express();
-// 서버 시작 시 초기 교사 계정 자동 생성 (없을 경우)
+// 서버 시작 시 초기 교사 계정 자동 생성/재설정
 const db = require('./db');
-const crypto = require('crypto'); // 또는 프로젝트에서 사용 중인 암호화 라이브러리
+const bcrypt = require('bcryptjs');
 
-async function initTeacher() {
+function initTeacher() {
   try {
-    const teacher = db.prepare('SELECT * FROM teachers LIMIT 1').get();
+    const hash = bcrypt.hashSync('1234', 10);
+    const teacher = db.prepare('SELECT * FROM teachers WHERE username = ?').get('admin');
+    
     if (!teacher) {
-      const hash = crypto.createHash('sha256').update('1234').digest('hex');
       db.prepare('INSERT INTO teachers (username, password_hash) VALUES (?, ?)').run('admin', hash);
-      console.log('기본 교사 계정 생성 완료 (ID: admin / PW: 1234)');
+      console.log('교사 계정 신규 생성 완료 (admin / 1234)');
+    } else {
+      db.prepare('UPDATE teachers SET password_hash = ? WHERE username = ?').run(hash, 'admin');
+      console.log('교사 비밀번호 bcryptjs 암호화 재설정 완료 (admin / 1234)');
     }
   } catch (err) {
-    console.error('교사 계정 생성 중 오류:', err);
+    console.error('교사 계정 설정 오류:', err);
   }
 }
 initTeacher();
