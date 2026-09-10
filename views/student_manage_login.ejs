@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>내 제출물 확인 - <%= assignment.title %></title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand">📚 과제 제출 사이트</a>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h1>내 제출물 확인</h1>
+      <p class="muted"><%= assignment.title %></p>
+
+      <% if (error) { %>
+        <div class="error-box"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/assignments/<%= assignment.id %>/manage">
+        <label for="student_name">제출할 때 입력한 이름 *</label>
+        <input type="text" id="student_name" name="student_name" required />
+
+        <label for="submission_password">제출물 비밀번호 *</label>
+        <input type="password" id="submission_password" name="submission_password" required autocomplete="current-password" />
+
+        <button type="submit">확인하기</button>
+      </form>
+
+      <p class="muted" style="margin-top:20px;">
+        <a href="/assignments/<%= assignment.id %>" style="color: var(--muted);">← 새로 제출하기</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

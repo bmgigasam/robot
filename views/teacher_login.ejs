@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>교사 로그인</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container" style="max-width: 420px; padding-top: 80px;">
+    <div class="card">
+      <h1>교사 로그인</h1>
+      <p class="muted">이 페이지는 교사 전용입니다. 학생은 로그인할 수 없습니다.</p>
+
+      <% if (error === 'invalid_credentials') { %>
+        <div class="error-box">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+      <% } else if (error === 'missing_fields') { %>
+        <div class="error-box">아이디와 비밀번호를 모두 입력해주세요.</div>
+      <% } else if (error === 'too_many_attempts') { %>
+        <div class="error-box">로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.</div>
+      <% } else if (error === 'login_required') { %>
+        <div class="error-box">먼저 로그인해주세요.</div>
+      <% } else if (error === 'server_error') { %>
+        <div class="error-box">서버 오류가 발생했습니다. 다시 시도해주세요.</div>
+      <% } %>
+
+      <form method="POST" action="/teacher/login">
+        <label for="username">아이디</label>
+        <input type="text" id="username" name="username" autocomplete="username" required />
+
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required />
+
+        <button type="submit">로그인</button>
+      </form>
+    </div>
+    <p class="muted" style="text-align:center;"><a href="/" style="color: var(--muted);">← 학생 과제 제출 페이지로 이동</a></p>
+  </div>
+</body>
+</html>

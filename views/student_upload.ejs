@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= assignment.title %> - 과제 제출</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand">📚 과제 제출 사이트</a>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h1><%= assignment.title %></h1>
+      <% if (assignment.description) { %><p><%= assignment.description %></p><% } %>
+      <% if (assignment.due_date) { %><p class="muted">마감일: <%= assignment.due_date %></p><% } %>
+
+      <% if (error) { %>
+        <div class="error-box"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/assignments/<%= assignment.id %>/submit" enctype="multipart/form-data">
+        <label for="student_name">이름 *</label>
+        <input type="text" id="student_name" name="student_name" required />
+
+        <label for="student_number">학번</label>
+        <input type="text" id="student_number" name="student_number" placeholder="예: 20301" />
+
+        <label for="file">제출 파일 *</label>
+        <input type="file" id="file" name="file" required />
+
+        <label for="submission_password">제출물 비밀번호 * (4자 이상)</label>
+        <input type="password" id="submission_password" name="submission_password" required minlength="4" autocomplete="new-password" />
+        <label for="submission_password_confirm">비밀번호 확인 *</label>
+        <input type="password" id="submission_password_confirm" name="submission_password_confirm" required minlength="4" autocomplete="new-password" />
+        <p class="muted" style="margin-top:6px;">이 비밀번호는 다른 사람이 알 수 없습니다. 나중에 이 파일을 다시 열어보거나, 재제출/삭제할 때 필요하니 꼭 기억해두세요.</p>
+
+        <button type="submit">제출하기</button>
+      </form>
+      <p class="muted" style="margin-top:20px; text-align:center;">
+        <a href="/assignments/<%= assignment.id %>/manage" style="color: var(--muted);">이미 제출했나요? 내 제출물 확인/재제출/삭제 →</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

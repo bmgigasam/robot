@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= assignment.title %></title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="/teacher/dashboard" class="brand">📚 과제함 (교사)</a>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h1><%= assignment.title %></h1>
+      <% if (assignment.description) { %><p><%= assignment.description %></p><% } %>
+      <% if (assignment.due_date) { %><p class="muted">마감일: <%= assignment.due_date %></p><% } %>
+
+      <form method="POST" action="/teacher/assignments/<%= assignment.id %>/delete"
+            onsubmit="return confirm('정말 이 과제와 모든 제출물을 삭제하시겠습니까?');">
+        <button type="submit" class="btn-danger">과제 삭제</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>제출물 (<%= submissions.length %>건)</h2>
+
+      <% if (tempPassword) { %>
+        <div class="success-box">
+          ✅ 임시 비밀번호가 발급되었습니다: <strong style="font-size:18px; letter-spacing:1px;"><%= tempPassword %></strong><br />
+          이 화면을 벗어나면 다시 확인할 수 없으니 지금 학생에게 전달하세요. 학생은 기존 이름 + 이 임시 비밀번호로 "내 제출물 확인"에 들어가 재제출/삭제할 수 있습니다.
+        </div>
+      <% } %>
+
+      <% if (submissions.length === 0) { %>
+        <p class="muted">아직 제출된 과제가 없습니다.</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr><th>이름</th><th>학번</th><th>파일명</th><th>제출 시각</th><th></th><th></th></tr>
+          </thead>
+          <tbody>
+            <% submissions.forEach(s => { %>
+              <tr>
+                <td><%= s.student_name %></td>
+                <td><%= s.student_number || '-' %></td>
+                <td><%= s.original_filename %></td>
+                <td><%= s.submitted_at %></td>
+                <td><a href="/teacher/submissions/<%= s.id %>/download" class="btn" style="margin-top:0; padding:6px 12px; font-size:13px;">다운로드</a></td>
+                <td>
+                  <form method="POST" action="/teacher/submissions/<%= s.id %>/reset-password"
+                        onsubmit="return confirm('<%= s.student_name %>의 제출물 비밀번호를 새 임시 비밀번호로 초기화할까요?\n기존 비밀번호는 더 이상 사용할 수 없습니다.');"
+                        style="display:inline;">
+                    <button type="submit" class="btn-secondary" style="margin-top:0; padding:6px 12px; font-size:13px;">비밀번호 초기화</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
